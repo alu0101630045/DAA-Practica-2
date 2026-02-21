@@ -2,6 +2,8 @@
 #define LOGICUNIT_H_
 
 #include "DataMemory.h"
+#include "ProgramMemory.h"
+#include "Tape.h"
 
 
 class LogicUnit {
@@ -13,7 +15,11 @@ class LogicUnit {
     void Sub(const int op_type, const int op);
     void Mult(const int op_type, const int op);
     void Div(const int op_type, const int op);
-
+    void Read(const int op, const InputTape input_tape);
+    void Write(const int op, OutputTape& output_tape);
+    void Jump(const std::string label, int& program_counter, ProgramMemory program_memory);
+    void JumpZero(const std::string label, int& program_counter, ProgramMemory program_memory);
+    void JumpGreaterThanZero(const std::string label, int& program_counter, ProgramMemory program_memory);        
   private:
     DataMemory* data_memory_; 
 };

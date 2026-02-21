@@ -80,5 +80,16 @@ int main() {
   //Indirecto
   logic_unit.Div(2, 10);
   std::cout << "El registro R0 contiene:" << dataMemory.read(0)<<'\n';
+
+  //PRUEBAS INSTRUCCION READ
+  logic_unit.Read(7, input);
+  std::cout << "El registro R7 contiene: " << dataMemory.read(7) << '\n';
+
+  //PRUEBAS INSTRUCCION WRITE
+  logic_unit.Write(7, output);
+  std::cout << "La cinta de salida contiene: " << output.getOutput()[0] << '\n';
+
+  //PRUEBAS ETIQUETAS
+  program.printLabels();
   return 0;
 }

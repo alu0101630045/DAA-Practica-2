@@ -170,3 +170,31 @@ void LogicUnit::Div(const int op_type, const int op) {
     data_memory_->write(0, div);
   }
 }
+
+void LogicUnit::Read(const int op, const InputTape input_tape) {
+  int tape_head = input_tape.read();
+  data_memory_->write(op, tape_head);
+}
+
+void LogicUnit::Write(const int op, OutputTape& output_tape) {
+  output_tape.write(data_memory_->read(op));
+}
+
+void LogicUnit::Jump(const std::string label, int& program_counter, ProgramMemory program_memory) {
+  int jump_address = program_memory.getLabels()[label];
+  program_counter = jump_address;
+}
+
+void LogicUnit::JumpZero(const std::string label, int& program_counter, ProgramMemory program_memory) {
+  if (data_memory_->read(0) == 0) {
+    int jump_address = program_memory.getLabels()[label];
+    program_counter = jump_address;
+  }
+}
+
+void LogicUnit::JumpGreaterThanZero(const std::string label, int& program_counter, ProgramMemory program_memory) {
+  if (data_memory_->read(0) > 0) {
+    int jump_address = program_memory.getLabels()[label];   
+    program_counter = jump_address;
+  }
+}
