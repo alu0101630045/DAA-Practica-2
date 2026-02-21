@@ -180,21 +180,21 @@ void LogicUnit::Write(const int op, OutputTape& output_tape) {
   output_tape.write(data_memory_->read(op));
 }
 
-void LogicUnit::Jump(const std::string label, int& program_counter, ProgramMemory program_memory) {
-  int jump_address = program_memory.getLabels()[label];
+void LogicUnit::Jump(const std::string label, int& program_counter) {
+  int jump_address = program_memory_->getLabels()[label];
   program_counter = jump_address;
 }
 
-void LogicUnit::JumpZero(const std::string label, int& program_counter, ProgramMemory program_memory) {
+void LogicUnit::JumpZero(const std::string label, int& program_counter) {
   if (data_memory_->read(0) == 0) {
-    int jump_address = program_memory.getLabels()[label];
+    int jump_address = program_memory_->getLabels()[label];
     program_counter = jump_address;
   }
 }
 
-void LogicUnit::JumpGreaterThanZero(const std::string label, int& program_counter, ProgramMemory program_memory) {
+void LogicUnit::JumpGreaterThanZero(const std::string label, int& program_counter) {
   if (data_memory_->read(0) > 0) {
-    int jump_address = program_memory.getLabels()[label];   
+    int jump_address = program_memory_->getLabels()[label];
     program_counter = jump_address;
   }
 }

@@ -17,11 +17,12 @@ class LogicUnit {
     void Div(const int op_type, const int op);
     void Read(const int op, const InputTape input_tape);
     void Write(const int op, OutputTape& output_tape);
-    void Jump(const std::string label, int& program_counter, ProgramMemory program_memory);
-    void JumpZero(const std::string label, int& program_counter, ProgramMemory program_memory);
-    void JumpGreaterThanZero(const std::string label, int& program_counter, ProgramMemory program_memory);        
+    void Jump(const std::string label, int& program_counter);
+    void JumpZero(const std::string label, int& program_counter);
+    void JumpGreaterThanZero(const std::string label, int& program_counter);        
   private:
     DataMemory* data_memory_; 
+    ProgramMemory* program_memory_;
 };
 
 
