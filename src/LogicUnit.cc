@@ -49,7 +49,6 @@ void LogicUnit::Store(const int op_type, const int op) {
   }
 }
 
-
 void LogicUnit::Add(const int op_type, const int op) {
   if (op_type == 0) {
     int r_cero_data = data_memory_->read(0);
@@ -103,7 +102,6 @@ void LogicUnit::Sub(const int op_type, const int op) {
     data_memory_->write(0, sub);
   }
 }
-
 
 void LogicUnit::Mult(const int op_type, const int op) {
   if (op_type == 0) {
@@ -171,13 +169,14 @@ void LogicUnit::Div(const int op_type, const int op) {
   }
 }
 
-void LogicUnit::Read(const int op, const InputTape input_tape) {
-  int tape_head = input_tape.read();
+void LogicUnit::Read(const int op) {
+  int tape_head = input_tape_->read();
   data_memory_->write(op, tape_head);
 }
 
-void LogicUnit::Write(const int op, OutputTape& output_tape) {
-  output_tape.write(data_memory_->read(op));
+void LogicUnit::Write(const int op) {
+  int op_value = data_memory_->read(op);
+  output_tape_->write(op_value);
 }
 
 void LogicUnit::Jump(const std::string label, int& program_counter) {

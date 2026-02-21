@@ -8,7 +8,7 @@ int main() {
   OutputTape output;
   DataMemory dataMemory;
   ProgramMemory program("programs/test1.ram");
-  LogicUnit logic_unit(&dataMemory);
+  LogicUnit logic_unit(&dataMemory, &program, &input, &output);
   
   for (int i = 0; i < program.getInstructions().size(); i++) {
     std::string instruction = program.getInstructions()[i];
@@ -82,12 +82,12 @@ int main() {
   std::cout << "El registro R0 contiene:" << dataMemory.read(0)<<'\n';
 
   //PRUEBAS INSTRUCCION READ
-  logic_unit.Read(7, input);
+  logic_unit.Read(7);
   std::cout << "El registro R7 contiene: " << dataMemory.read(7) << '\n';
 
   //PRUEBAS INSTRUCCION WRITE
-  logic_unit.Write(7, output);
-  std::cout << "La cinta de salida contiene: " << output.getOutput()[0] << '\n';
+  logic_unit.Write(7);
+  logic_unit.Write(0);
 
   //PRUEBAS ETIQUETAS
   program.printLabels();
