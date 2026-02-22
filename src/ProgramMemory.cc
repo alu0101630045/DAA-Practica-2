@@ -4,6 +4,10 @@
 /// @param filename El nombre del archivo que contiene las instrucciones del programa.
 ProgramMemory::ProgramMemory(const std::string filename) {
   std::ifstream is(filename);
+  if (!is.is_open()) {
+    std::cerr << "Error opening file: " << filename << std::endl;
+    return;
+  }
   std::string line;
   int line_counter = 0;
   while (std::getline(is, line)) {
@@ -18,6 +22,7 @@ ProgramMemory::ProgramMemory(const std::string filename) {
       line = line.substr(line.find(':') + 1);
       line.erase(0, line.find_first_not_of(" \t"));
     }
+    instructions.push_back(line);
     line_counter++;
   }
 }

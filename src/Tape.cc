@@ -1,31 +1,14 @@
 #include "../lib/Tape.h"
 
-/// @brief Constructor de la clase Tape
-Tape::Tape(const std::string filename) : position(0) {
+InputTape::InputTape(const std::string filename) {
   std::ifstream is(filename);
   std::string line;
   is >> line;
   for (int i = 0; i < line.size(); i++) {
     int actual = line[i] - '0'; 
+    std::cout << "Reading from input tape: " << actual << std::endl;  
     tape.push_back(actual);
   }
-}
-
-/// @brief Mueve la posición de la cinta a la derecha, si no se ha alcanzado el final de la cinta.
-void Tape::moveRight() {
-    if (position < tape.size() - 1) {
-        position++;
-    }
-}
-
-/// @brief Devuelve la posición actual de la cinta.
-/// @return La posición actual de la cinta. 
-int Tape::getPosition() const {
-    return position;
-}
-
-InputTape::InputTape(const std::string filename) : Tape(filename) {
-  tape = Tape(filename).getTape();
   position = 0;
 }
 
@@ -38,7 +21,7 @@ int InputTape::read() const {
     return -1; 
 }
 
-OutputTape::OutputTape() : Tape({}) {}
+OutputTape::OutputTape() {}
 
 /// @brief Escribe un valor en la posición actual de la cinta de salida. El valor se agrega al final de la cinta. 
 /// @param data  
@@ -50,4 +33,13 @@ void OutputTape::write(const int data) {
 /// @return El contenido de la cinta de salida. 
 std::vector<int> OutputTape::getOutput() const {
   return tape;
+}
+
+/// @brief Imprime el contenido de la cinta de salida en un archivo. Cada valor se escribe en una nueva línea.
+/// @param filename El nombre del archivo donde se imprimirá el contenido de la cinta de salida.
+void OutputTape::printOutputFile(const std::string filename) const {
+  std::ofstream os(filename);
+  for (const auto& value : tape) {
+    os << value;
+  }
 }

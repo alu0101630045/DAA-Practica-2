@@ -30,6 +30,7 @@ void LogicUnit::Load(const int op_type, const int op) {
     }
     data_memory_->write(0, data);
   }
+  input_tape_->moveRight();
 }
 
 void LogicUnit::Store(const int op_type, const int op) {
@@ -177,23 +178,24 @@ void LogicUnit::Read(const int op) {
 void LogicUnit::Write(const int op) {
   int op_value = data_memory_->read(op);
   output_tape_->write(op_value);
+  output_tape_->moveRight();
 }
 
 void LogicUnit::Jump(const std::string label, int& program_counter) {
   int jump_address = program_memory_->getLabels()[label];
-  program_counter = jump_address;
+  program_counter = jump_address - 1;
 }
 
 void LogicUnit::JumpZero(const std::string label, int& program_counter) {
   if (data_memory_->read(0) == 0) {
     int jump_address = program_memory_->getLabels()[label];
-    program_counter = jump_address;
+    program_counter = jump_address - 1;
   }
 }
 
 void LogicUnit::JumpGreaterThanZero(const std::string label, int& program_counter) {
   if (data_memory_->read(0) > 0) {
     int jump_address = program_memory_->getLabels()[label];
-    program_counter = jump_address;
+    program_counter = jump_address - 1;
   }
 }
