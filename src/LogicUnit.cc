@@ -35,7 +35,7 @@ void LogicUnit::Store(const int op_type, const int op) {
   }
 
   if (op_type == 2) {
-    int regist = data_memory_->read(0);
+    int regist = data_memory_->read(op);
     if (regist > 20 || regist <= 0) {
       std::cerr<<"Incorrect Register: R" << regist << " does not exist in memory"<<'\n';
       return;
