@@ -8,7 +8,7 @@ int main() {
   InputTape input("input_tape/input_tape1.txt");
   OutputTape output;
   DataMemory dataMemory;
-  ProgramMemory program("programs/test2.ram");
+  ProgramMemory program("programs/test4.ram");
   std::cout << "Program Instructions:" << std::endl;
   for (const auto& instruction : program.getInstructions()) {
     std::cout << instruction << std::endl;

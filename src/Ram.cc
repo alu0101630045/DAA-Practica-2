@@ -69,7 +69,7 @@ void Ram::executeInstruction(const std::string& instruction, int& program_counte
     }
     int op_value = std::stoi(op);
     logic_unit_.Sub(op_type, op_value);
-  } else if (opcode == "mult" || opcode == "MULT") {
+  } else if (opcode == "mul" || opcode == "MUL") {
     int op_type;
     std::string op;
     iss >> op;
