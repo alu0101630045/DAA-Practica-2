@@ -16,7 +16,7 @@ class LogicUnit {
     void Mult(const int op_type, const int op);
     void Div(const int op_type, const int op);
     void Read(const int op);
-    void Write(const int op);
+    void Write(const int op_type, const int op);
     void Jump(const std::string label, int& program_counter);
     void JumpZero(const std::string label, int& program_counter);
     void JumpGreaterThanZero(const std::string label, int& program_counter);      

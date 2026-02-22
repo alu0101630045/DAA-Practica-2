@@ -8,62 +8,129 @@ void Ram::executeInstruction(const std::string& instruction, int& program_counte
   std::string opcode;
   iss >> opcode;
 
-  if (opcode == "load") {
+  if (opcode == "load" || opcode == "LOAD") {
     int op_type;
     std::string op;
     iss >> op;
     if (op[0] == '=') {
       op_type = 0;
-      op.erase(0, 1); // Remove '=' from the operand
+      op.erase(0, 1); 
     } else if (op[0] == '*') {
       op_type = 2;
-      op.erase(0, 1); // Remove '*' from the operand
+      op.erase(0, 1); 
     } else {
       op_type = 1;
     }
     int op_value = std::stoi(op);
+    std::cout << "LOAD operation type: " << op_type << ", operand value: " << op_value << std::endl;
     logic_unit_.Load(op_type, op_value);
-  } else if (opcode == "store") {
-    int op_type, op;
-    iss >> op_type >> op;
-    logic_unit_.Store(op_type, op);
-  } else if (opcode == "add") {
-    int op_type, op;
-    iss >> op_type >> op;
-    logic_unit_.Add(op_type, op);
-  } else if (opcode == "sub") {
-    int op_type, op;
-    iss >> op_type >> op;
-    logic_unit_.Sub(op_type, op);
-  } else if (opcode == "mult") {
-    int op_type, op;
-    iss >> op_type >> op;
-    logic_unit_.Mult(op_type, op);
-  } else if (opcode == "div") {
-    int op_type, op;
-    iss >> op_type >> op;
-    logic_unit_.Div(op_type, op);
-  } else if (opcode == "read") {
+  } else if (opcode == "store" || opcode == "STORE") {
+    int op_type;
+    std::string op;
+    iss >> op;
+    if (op[0] == '=') {
+      op_type = 0;
+      op.erase(0, 1); 
+    } else if (op[0] == '*') {
+      op_type = 2;
+      op.erase(0, 1); 
+    } else {
+      op_type = 1;
+    }
+    int op_value = std::stoi(op);
+    logic_unit_.Store(op_type, op_value);
+  } else if (opcode == "add" || opcode == "ADD") {
+    int op_type;
+    std::string op;
+    iss >> op;
+    if (op[0] == '=') {
+      op_type = 0;
+      op.erase(0, 1); 
+    } else if (op[0] == '*') {
+      op_type = 2;
+      op.erase(0, 1); 
+    } else {
+      op_type = 1;
+    }
+    int op_value = std::stoi(op);
+    logic_unit_.Add(op_type, op_value);
+  } else if (opcode == "sub" || opcode == "SUB") {
+    int op_type;
+    std::string op;
+    iss >> op;
+    if (op[0] == '=') {
+      op_type = 0;
+      op.erase(0, 1); 
+    } else if (op[0] == '*') {
+      op_type = 2;
+      op.erase(0, 1); 
+    } else {
+      op_type = 1;
+    }
+    int op_value = std::stoi(op);
+    logic_unit_.Sub(op_type, op_value);
+  } else if (opcode == "mult" || opcode == "MULT") {
+    int op_type;
+    std::string op;
+    iss >> op;
+    if (op[0] == '=') {
+      op_type = 0;
+      op.erase(0, 1); 
+    } else if (op[0] == '*') {
+      op_type = 2;
+      op.erase(0, 1); 
+    } else {
+      op_type = 1;
+    }
+    int op_value = std::stoi(op);
+    logic_unit_.Mult(op_type, op_value);
+  } else if (opcode == "div" || opcode == "DIV") {
+    int op_type;
+    std::string op;
+    iss >> op;
+    if (op[0] == '=') {
+      op_type = 0;
+      op.erase(0, 1); 
+    } else if (op[0] == '*') {
+      op_type = 2;
+      op.erase(0, 1); 
+    } else {
+      op_type = 1;
+    }
+    int op_value = std::stoi(op);
+    logic_unit_.Div(op_type, op_value);
+  } else if (opcode == "read" || opcode == "READ") {
     int op;
     iss >> op;
     logic_unit_.Read(op);
-  } else if (opcode == "write") {
-    int op;
+  } else if (opcode == "write" || opcode == "WRITE") {
+    int op_type;
+    std::string op;
     iss >> op;
-    logic_unit_.Write(op);
-  } else if (opcode == "jump") {
+    if (op[0] == '=') {
+      op_type = 0;
+      op.erase(0, 1); 
+    } else if (op[0] == '*') {
+      op_type = 2;
+      op.erase(0, 1); 
+    } else {
+      op_type = 1;
+    }
+    int op_value = std::stoi(op);
+    logic_unit_.Write(op_type, op_value);
+  } else if (opcode == "jump" || opcode == "JUMP") {
     std::string label;
     iss >> label;
     logic_unit_.Jump(label, program_counter);
-  } else if (opcode == "jzero") {
+  } else if (opcode == "jzero" || opcode == "JZERO") {
     std::string label;
     iss >> label;
     logic_unit_.JumpZero(label, program_counter);
-  } else if (opcode == "jgtz") {
+  } else if (opcode == "jgtz" || opcode == "JGTZ") {
     std::string label;
     iss >> label;
     logic_unit_.JumpGreaterThanZero(label, program_counter);
-  } else if (opcode == "halt") {
+  } else if (opcode == "halt" || opcode == "HALT") {
     std::cout << "Program halted." << std::endl;
     return;
   } else {

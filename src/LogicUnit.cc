@@ -9,10 +9,6 @@ void LogicUnit::Load(const int op_type, const int op) {
   // Register (Op i)
   if (op_type == 1) {
     int data = data_memory_->read(op);
-    if (data == -1) {
-      std::cerr<<"Incorrect Register: R" << op << " does not exist in memory"<<'\n';
-      return;
-    }
     data_memory_->write(0, data);
   }
 
@@ -30,7 +26,6 @@ void LogicUnit::Load(const int op_type, const int op) {
     }
     data_memory_->write(0, data);
   }
-  input_tape_->moveRight();
 }
 
 void LogicUnit::Store(const int op_type, const int op) {
@@ -173,12 +168,31 @@ void LogicUnit::Div(const int op_type, const int op) {
 void LogicUnit::Read(const int op) {
   int tape_head = input_tape_->read();
   data_memory_->write(op, tape_head);
+  input_tape_->moveRight();
 }
 
-void LogicUnit::Write(const int op) {
-  int op_value = data_memory_->read(op);
-  output_tape_->write(op_value);
-  output_tape_->moveRight();
+void LogicUnit::Write(const int op_type, const int op) {
+  if (op_type == 0) {
+    output_tape_->write(op);
+    output_tape_->moveRight();
+  }
+  
+  if (op_type == 1) {
+    int op_value = data_memory_->read(op);
+    output_tape_->write(op_value);
+    output_tape_->moveRight();
+  }
+
+  if (op_type == 2) {
+    int regist = data_memory_->read(op);
+    if (regist > 20 || regist <= 0) {
+      std::cerr<<"Incorrect Register: R" << regist << " does not exist in memory"<<'\n';
+      return;
+    }
+    int op_value = data_memory_->read(regist);
+    output_tape_->write(op_value);
+    output_tape_->moveRight();
+  }
 }
 
 void LogicUnit::Jump(const std::string label, int& program_counter) {
@@ -188,6 +202,7 @@ void LogicUnit::Jump(const std::string label, int& program_counter) {
 
 void LogicUnit::JumpZero(const std::string label, int& program_counter) {
   if (data_memory_->read(0) == 0) {
+    std::cout << "Jumping to label: " << label << '\n';
     int jump_address = program_memory_->getLabels()[label];
     program_counter = jump_address - 1;
   }
