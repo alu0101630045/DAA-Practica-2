@@ -1,19 +1,14 @@
-#ifndef LOGICUNIT_H_
-#define LOGICUNIT_H_
+#ifndef LOGICUNITDINAMIC_H_
+#define LOGICUNITDINAMIC_H_
 
-#include "DataMemory.h"
-#include "ProgramMemory.h"
-#include "Tape.h"
-
-
-#include "DataMemory.h"
+#include "DataMemoryDinamic.h"
 #include "ProgramMemory.h"
 #include "Tape.h"
 #include "LogicUnitAbstract.h"
 
-class LogicUnit : public LogicUnitAbstract{
+class LogicUnitDinamic : public LogicUnitAbstract{
   public:
-    LogicUnit(DataMemory* data_memory, ProgramMemory* program_memory, InputTape* input_tape, OutputTape* output_tape) : data_memory_(data_memory), program_memory_(program_memory), input_tape_(input_tape), output_tape_(output_tape) {} 
+    LogicUnitDinamic(DataMemoryDinamic* data_memory, ProgramMemory* program_memory, InputTape* input_tape, OutputTape* output_tape) : data_memory_(data_memory), program_memory_(program_memory), input_tape_(input_tape), output_tape_(output_tape) {} 
     void Load(const InstructionContext& context) override;
     void Store(const InstructionContext& context) override;
     void Add(const InstructionContext& context) override;
@@ -25,15 +20,12 @@ class LogicUnit : public LogicUnitAbstract{
     void Jump(const InstructionContext& context) override;
     void JumpZero(const InstructionContext& context) override;
     void JumpGreaterThanZero(const InstructionContext& context) override;
-
-
+    
   private:
-    DataMemory* data_memory_; 
+    DataMemoryDinamic* data_memory_; 
     OutputTape* output_tape_; 
     InputTape* input_tape_; 
     ProgramMemory* program_memory_;
 };
 
-
-
-#endif //LOGICUNIT_H_
+#endif //LOGICUNITDINAMIC_H_

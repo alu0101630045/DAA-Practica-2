@@ -1,0 +1,74 @@
+READ 1[0]
+LOAD 0[0]10
+STORE 5[0]
+LOAD 1[0]
+STORE 2[0]
+
+leer_bub:   READ 5[0][0]
+            LOAD 5[0]
+            ADD 0[0]1
+            STORE 5[0]
+            LOAD 2[0]
+            SUB 0[0]1
+            STORE 2[0]
+            JGTZ leer_bub
+
+            LOAD 0[0]1
+            STORE 2[0]
+
+for_i:      LOAD 1[0]
+            SUB 2[0]
+            JGTZ init_j
+            JUMP prep_out
+
+init_j:     LOAD 1[0]
+            ADD 0[0]9
+            STORE 3[0]
+
+for_j:      LOAD 3[0]
+            SUB 0[0]9
+            SUB 2[0]
+            JGTZ check_sw
+            JUMP next_i
+
+check_sw:   LOAD 3[0]
+            SUB 0[0]1
+            STORE 5[0]
+            LOAD 5[0][0]
+            STORE 6[0]
+            SUB 3[0][0]
+            JGTZ do_swap
+            JUMP next_j
+
+do_swap:    LOAD 3[0][0]
+            STORE 4[0]
+            LOAD 6[0]
+            STORE 3[0][0]
+            LOAD 4[0]
+            STORE 5[0][0]
+
+next_j:     LOAD 3[0]
+            SUB 0[0]1
+            STORE 3[0]
+            JUMP for_j
+
+next_i:     LOAD 2[0]
+            ADD 0[0]1
+            STORE 2[0]
+            JUMP for_i
+
+prep_out:   LOAD 0[0]10
+            STORE 5[0]
+            LOAD 1[0]
+            STORE 2[0]
+
+escribir:   WRITE 5[0][0]
+            LOAD 5[0]
+            ADD 0[0]1
+            STORE 5[0]
+            LOAD 2[0]
+            SUB 0[0]1
+            STORE 2[0]
+            JGTZ escribir
+
+fin_bub:    HALT

@@ -1,0 +1,46 @@
+# --- INICIALIZACIÓN ---
+# Poner el valor 3 en R2[0] (nuestro puntero)
+			LOAD 0[0]3      # Carga la constante 3 en el acumulador
+			STORE 2[0]      # Guarda el acumulador en R2 pos 0
+		
+# --- BUCLE DE LECTURA ---
+lee:		READ 1[0]       # Lee de la cinta y guarda en R1 pos 0
+			LOAD 1[0]       # Carga el valor de R1[0] al acumulador
+			JZERO fin       # Si es 0, salta a la etiqueta 'fin'
+
+			STORE 2[0][0]   # Guarda el acumulador en el registro apuntado por R2[0], posición 0
+			
+			# Incrementar el puntero R2[0] en 1
+			LOAD 2[0]       # Carga R2[0] al acumulador
+			ADD 0[0]1       # Suma la constante 1 al acumulador
+			STORE 2[0]      # Guarda el nuevo valor en R2[0]
+
+			JUMP lee        # Vuelve a leer
+
+# --- PREPARACIÓN PARA MULTIPLICAR ---
+fin:		# Guardar un 0 al final de los datos en memoria (opcional pero seguro)
+			LOAD 0[0]0      # Carga constante 0
+			STORE 2[0][0]   # Guarda el 0 en la posición final apuntada por R2[0]
+			
+			# Reiniciar el puntero R2[0] a 3 para volver al inicio del array
+			LOAD 0[0]3      # Carga constante 3
+			STORE 2[0]      # Guarda en R2[0]
+
+# --- BUCLE DE MULTIPLICACIÓN Y ESCRITURA ---
+carga:		LOAD 2[0][0]    # Carga al acumulador el valor apuntado por R2[0]
+			JZERO fin2      # Si lee el 0 del final, termina el programa
+
+			MUL 0[0]3       # Multiplica el acumulador por constante 3
+			
+			STORE 2[0][0]   # Guarda el resultado sobreescribiendo el valor original
+			WRITE 2[0][0]   # Imprime el resultado en la cinta de salida
+
+			# Incrementar el puntero R2[0] en 1
+			LOAD 2[0]       # Carga R2[0] al acumulador
+			ADD 0[0]1       # Suma la constante 1
+			STORE 2[0]      # Guarda el nuevo valor en R2[0]
+		
+			JUMP carga      # Vuelve a procesar el siguiente dato
+
+# --- FIN DEL PROGRAMA ---
+fin2: 		HALT

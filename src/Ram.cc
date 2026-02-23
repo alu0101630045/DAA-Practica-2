@@ -1,139 +1,115 @@
 #include "../lib/Ram.h"
+#include <sstream>
+#include <iostream>
+#include <algorithm>
 
-/// @brief Ejecuta una instrucción dada y actualiza el contador de programa si es necesario.
-/// @param instruction La instrucción a ejecutar.
-/// @param program_counter El contador de programa que se actualizará si la instrucción es un salto.
 void Ram::executeInstruction(const std::string& instruction, int& program_counter) {
+
+  if (instruction.empty()) {
+    return;
+  }
+
   std::istringstream iss(instruction);
   std::string opcode;
-  iss >> opcode;
+  if (!(iss >> opcode)) return;
 
-  if (opcode == "load" || opcode == "LOAD") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    std::cout << "LOAD operation type: " << op_type << ", operand value: " << op_value << std::endl;
-    logic_unit_.Load(op_type, op_value);
-  } else if (opcode == "store" || opcode == "STORE") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    logic_unit_.Store(op_type, op_value);
-  } else if (opcode == "add" || opcode == "ADD") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    logic_unit_.Add(op_type, op_value);
-  } else if (opcode == "sub" || opcode == "SUB") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    logic_unit_.Sub(op_type, op_value);
-  } else if (opcode == "mul" || opcode == "MUL") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    logic_unit_.Mult(op_type, op_value);
-  } else if (opcode == "div" || opcode == "DIV") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    logic_unit_.Div(op_type, op_value);
-  } else if (opcode == "read" || opcode == "READ") {
-    int op;
-    iss >> op;
-    logic_unit_.Read(op);
-  } else if (opcode == "write" || opcode == "WRITE") {
-    int op_type;
-    std::string op;
-    iss >> op;
-    if (op[0] == '=') {
-      op_type = 0;
-      op.erase(0, 1); 
-    } else if (op[0] == '*') {
-      op_type = 2;
-      op.erase(0, 1); 
-    } else {
-      op_type = 1;
-    }
-    int op_value = std::stoi(op);
-    logic_unit_.Write(op_type, op_value);
-  } else if (opcode == "jump" || opcode == "JUMP") {
-    std::string label;
-    iss >> label;
-    logic_unit_.Jump(label, program_counter);
-  } else if (opcode == "jzero" || opcode == "JZERO") {
-    std::string label;
-    iss >> label;
-    logic_unit_.JumpZero(label, program_counter);
-  } else if (opcode == "jgtz" || opcode == "JGTZ") {
-    std::string label;
-    iss >> label;
-    logic_unit_.JumpGreaterThanZero(label, program_counter);
-  } else if (opcode == "halt" || opcode == "HALT") {
+  // Ignorar si el opcode empieza por comentario
+  if (opcode[0] == '#') return;
+  
+  std::transform(opcode.begin(), opcode.end(), opcode.begin(), ::toupper);
+
+  InstructionContext ctx{};
+  ctx.program_counter = &program_counter;
+
+  if (opcode == "HALT") {
     std::cout << "Program halted." << std::endl;
     return;
-  } else {
-    std::cerr << "Unknown instruction: " << opcode << std::endl;
+  }
+
+  if (opcode == "JUMP" || opcode == "JZERO" || opcode == "JGTZ") {
+    iss >> ctx.label;
+    if (opcode == "JUMP") logic_unit_->Jump(ctx);
+    else if (opcode == "JZERO") logic_unit_->JumpZero(ctx);
+    else if (opcode == "JGTZ") logic_unit_->JumpGreaterThanZero(ctx);
+    return;
+  }
+
+  std::string op;
+  iss >> op; 
+
+  if (op.empty()) return;
+
+  // analizador hibrido
+  size_t b_open = op.find('[');
+  
+  if (b_open != std::string::npos) {
+    // sintaxis dinamica
+    size_t b_close = op.find(']');
+    ctx.regist = std::stoi(op.substr(0, b_open));
+    int p_val = std::stoi(op.substr(b_open + 1, b_close - b_open - 1));
+    std::string rem = op.substr(b_close + 1);
+
+    if (rem.empty()) { ctx.op_type = 1; ctx.pos = p_val; }
+    else if (rem[0] == '[') { 
+        ctx.op_type = 2; ctx.pos = p_val; 
+        ctx.pos_ind = std::stoi(rem.substr(1, rem.find(']', 1) - 1));
+    }
+    else { ctx.op_type = 0; ctx.pos = std::stoi(rem); }
+  } 
+  else {
+    // sintaxis estatica
+    if (op[0] == '=') {
+      ctx.op_type = 0;
+      ctx.pos = std::stoi(op.substr(1));
+    } else if (op[0] == '*') {
+      ctx.op_type = 2;
+      ctx.regist = std::stoi(op.substr(1));
+      ctx.pos = 0;
+    } else {
+      ctx.op_type = 1;
+      ctx.regist = std::stoi(op);
+      ctx.pos = 0; 
+    }
+  }
+
+  // Comprobacion de instrucciones ilegales
+  // No se puede hacer STORE o READ a una constante
+  if ((opcode == "STORE" || opcode == "READ") && ctx.op_type == 0) {
+    std::cerr << "\nFATAL ERROR: Illegal instruction. Cannot execute '" 
+              << opcode << "' with a constant operand at line " << program_counter << "." << std::endl;
+    std::exit(EXIT_FAILURE);
+  }
+
+  if (ctx.op_type != 0 && ctx.regist == 0) {
+    
+    // WRITE y READ no se pueden usar en R0
+    if (opcode == "WRITE" || opcode == "READ") {
+      std::cerr << "\nFATAL ERROR: Illegal instruction. I/O operations ('" 
+                << opcode << "') are not allowed directly on the Accumulator (R0) at line" << program_counter << "." << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+
+    // STORE no tiene sentido usarse en R0
+    if (opcode == "STORE") {
+      std::cerr << "\nFATAL ERROR: Illegal instruction. 'STORE' to the "
+                << "Accumulator (R0) is not allowed at line " << program_counter << "." << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+  }
+
+  // ejecución
+  if (opcode == "LOAD") logic_unit_->Load(ctx);
+  else if (opcode == "STORE") logic_unit_->Store(ctx);
+  else if (opcode == "ADD") logic_unit_->Add(ctx);
+  else if (opcode == "SUB") logic_unit_->Sub(ctx);
+  else if (opcode == "MUL") logic_unit_->Mult(ctx);
+  else if (opcode == "DIV") logic_unit_->Div(ctx);
+  else if (opcode == "READ") logic_unit_->Read(ctx);
+  else if (opcode == "WRITE") logic_unit_->Write(ctx);
+  else {
+    // Hay alguna instruccion ilegar
+    std::cerr << "\nFatal ERROR: Ilegal instruction in line: " 
+              << program_counter << " -> '" << opcode << "'" << std::endl;
+    std::exit(EXIT_FAILURE);
   }
 }

@@ -1,0 +1,76 @@
+READ 1[0]
+LOAD 0[0]10
+STORE 5[0]
+LOAD 1[0]
+STORE 2[0]
+
+leer_ins:   READ 5[0][0]
+            LOAD 5[0]
+            ADD 0[0]1
+            STORE 5[0]
+            LOAD 2[0]
+            SUB 0[0]1
+            STORE 2[0]
+            JGTZ leer_ins
+
+            LOAD 0[0]11
+            STORE 2[0]
+
+for_ins:    LOAD 2[0]
+            SUB 0[0]9
+            SUB 1[0]
+            JGTZ prep_out
+
+            LOAD 2[0][0]
+            STORE 4[0]
+            LOAD 2[0]
+            SUB 0[0]1
+            STORE 3[0]
+
+while_ins:  LOAD 3[0]
+            SUB 0[0]10
+            JGTZ cont_w
+            JZERO cont_w
+            JUMP end_w
+
+cont_w:     LOAD 3[0][0]
+            STORE 6[0]
+            SUB 4[0]
+            JGTZ swap_ins
+            JUMP end_w
+
+swap_ins:   LOAD 3[0]
+            ADD 0[0]1
+            STORE 5[0]
+            LOAD 6[0]
+            STORE 5[0][0]
+            LOAD 3[0]
+            SUB 0[0]1
+            STORE 3[0]
+            JUMP while_ins
+
+end_w:      LOAD 3[0]
+            ADD 0[0]1
+            STORE 5[0]
+            LOAD 4[0]
+            STORE 5[0][0]
+            LOAD 2[0]
+            ADD 0[0]1
+            STORE 2[0]
+            JUMP for_ins
+
+prep_out:   LOAD 0[0]10
+            STORE 5[0]
+            LOAD 1[0]
+            STORE 2[0]
+
+escribir:   WRITE 5[0][0]
+            LOAD 5[0]
+            ADD 0[0]1
+            STORE 5[0]
+            LOAD 2[0]
+            SUB 0[0]1
+            STORE 2[0]
+            JGTZ escribir
+
+fin_ins:    HALT
