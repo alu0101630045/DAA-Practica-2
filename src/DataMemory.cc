@@ -1,3 +1,16 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file DataMemory.cc
+ * @desc Implementación de los métodos de la clase DataMemory (memoria estática).
+ *
+ */
+
 #include "../lib/DataMemory.h"
 
 DataMemory::DataMemory() {

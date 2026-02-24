@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file Tape.h
+ * @desc Declaración de clases para cintas de entrada y salida.
+ *
+ */
 #ifndef TAPE_H
 #define TAPE_H
 

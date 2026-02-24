@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file Ram.cc
+ * @desc Ejecuta instrucciones interpretando la sintaxis RAM.
+ *
+ */
 #include "../lib/Ram.h"
 #include <sstream>
 #include <iostream>

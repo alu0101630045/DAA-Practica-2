@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file ProgramMemory.h
+ * @desc Declaración de la clase ProgramMemory para gestionar instrucciones.
+ *
+ */
 #ifndef PROGRAM_MEMORY_H
 #define PROGRAM_MEMORY_H
 

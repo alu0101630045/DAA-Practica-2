@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file functions.cc
+ * @desc Funciones auxiliares, incluido el menú de selección de programas.
+ *
+ */
 #include "../lib/functions.h"
 
 void MostrarMenu(std::string& ram_filename, int& mode) {

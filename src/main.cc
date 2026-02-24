@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file main.cc
+ * @desc Función principal que inicializa y ejecuta la máquina RAM.
+ *
+ */
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,23 +26,18 @@
 int main() {
   std::string ram_filename;
   int mode = 0;
-
-  // Menu (se selecciona el programa RAM y si se quiere memoria estática o dinámica)
   MostrarMenu(ram_filename, mode);
 
-  // 2. Inicialización compartida
   InputTape input("input_tape/input_tape1.txt");
   OutputTape output;
   ProgramMemory program(ram_filename);
 
-  // Se instancian ambas memorias, dinámica y estática
   DataMemoryDinamic data_memory_dinamic;
   LogicUnitDinamic logic_unit_dinamic(&data_memory_dinamic, &program, &input, &output);
 
   DataMemory data_memory_static;
   LogicUnit logic_unit_static(&data_memory_static, &program, &input, &output);
 
-  // Apuntamos al tipo de memoria elegido
   LogicUnitAbstract* logic_unit_ptr = nullptr;
 
   if (mode == 1) {
@@ -41,7 +48,6 @@ int main() {
     logic_unit_ptr = &logic_unit_static;
   }
 
-  // Instanciamos la maquina RAM
   Ram ram(logic_unit_ptr); 
 
   std::cout << "Ejecutando programa...\n" << std::endl;

@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file LogicUnit.h
+ * @desc Declaración de la unidad lógica para memoria estática.
+ *
+ */
 #ifndef LOGICUNIT_H_
 #define LOGICUNIT_H_
 

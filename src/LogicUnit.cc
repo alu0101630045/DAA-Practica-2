@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file LogicUnit.cc
+ * @desc Implementación de la unidad lógica para memoria estática.
+ *
+ */
 #include "../lib/LogicUnit.h"
 
 void LogicUnit::Load(const InstructionContext& context) {
@@ -202,7 +214,6 @@ void LogicUnit::Jump(const InstructionContext& context) {
 
 void LogicUnit::JumpZero(const InstructionContext& context) {
   if (data_memory_->read(0) == 0) {
-    std::cout << "Jumping to label: " << context.label << '\n';
     int jump_address = program_memory_->getLabels()[context.label];
     *(context.program_counter) = jump_address - 1;
   }

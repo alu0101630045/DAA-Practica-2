@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file LogicUnitAbstract.h
+ * @desc Interfaz abstracta para unidades lógicas.
+ *
+ */
 #ifndef LOGICUNITABSTRACT_H_
 #define LOGICUNITABSTRACT_H_
 

@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file ProgramMemory.cc
+ * @desc Construcción y gestión de la memoria de programa.
+ *
+ */
 #include "../lib/ProgramMemory.h"
 
 /// @brief Constructor de la clase ProgramMemory

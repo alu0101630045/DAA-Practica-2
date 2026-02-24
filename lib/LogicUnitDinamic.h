@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file LogicUnitDinamic.h
+ * @desc Declaración de la unidad lógica para memoria dinámica.
+ *
+ */
 #ifndef LOGICUNITDINAMIC_H_
 #define LOGICUNITDINAMIC_H_
 

@@ -1,3 +1,15 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Diseño y Análisis de algoritmos
+ *
+ * @author Pablo García de los Reyes
+ * @since Feb 24 2026
+ * @file Tape.cc
+ * @desc Manejo de cintas de entrada y salida.
+ *
+ */
 #include "../lib/Tape.h"
 
 InputTape::InputTape(const std::string filename) {
@@ -6,7 +18,6 @@ InputTape::InputTape(const std::string filename) {
   is >> line;
   for (int i = 0; i < line.size(); i++) {
     int actual = line[i] - '0'; 
-    std::cout << "Reading from input tape: " << actual << std::endl;  
     tape.push_back(actual);
   }
   position = 0;
