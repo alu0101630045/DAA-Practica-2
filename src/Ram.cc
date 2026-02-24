@@ -16,7 +16,6 @@
 #include <algorithm>
 
 void Ram::executeInstruction(const std::string& instruction, int& program_counter) {
-
   if (instruction.empty()) {
     return;
   }
@@ -63,7 +62,8 @@ void Ram::executeInstruction(const std::string& instruction, int& program_counte
 
     if (rem.empty()) { ctx.op_type = 1; ctx.pos = p_val; }
     else if (rem[0] == '[') { 
-        ctx.op_type = 2; ctx.pos = p_val; 
+        ctx.op_type = 2; 
+        ctx.pos = p_val; 
         ctx.pos_ind = std::stoi(rem.substr(1, rem.find(']', 1) - 1));
     }
     else { ctx.op_type = 0; ctx.pos = std::stoi(rem); }
