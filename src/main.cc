@@ -23,12 +23,14 @@
 #include "../lib/functions.h"
 
 
-int main() {
+int main(int argc, char* argv[]) {
+  std::string input_tape_filename = argv[1];
+  std::string output_tape_filename = argv[2];
   std::string ram_filename;
   int mode = 0;
   MostrarMenu(ram_filename, mode);
 
-  InputTape input("input_tape/input_tape1.txt");
+  InputTape input(input_tape_filename);
   OutputTape output;
   ProgramMemory program(ram_filename);
 
@@ -63,11 +65,11 @@ int main() {
   }
   
   // Se pone el resultado en la cinta de salida
-  output.printOutputFile("output_tape/output_tape.out");
+  output.printOutputFile(output_tape_filename);
 
   std::cout << "========================================" << std::endl;
   std::cout << "Total de saltos e instrucciones ejecutadas: " << instruction_count << std::endl;
-  std::cout << "Resultados guardados con éxito en 'output_tape/output_tape.out'." << std::endl;
+  std::cout << "Resultados guardados con éxito en '" << output_tape_filename << "'." << std::endl;
   std::cout << "========================================\n" << std::endl;
 
   return 0;

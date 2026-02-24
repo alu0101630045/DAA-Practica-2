@@ -177,7 +177,6 @@ void LogicUnitDinamic::Jump(const InstructionContext& context) {
 
 void LogicUnitDinamic::JumpZero(const InstructionContext& context) {
   if (data_memory_->read(0, 0) == 0) {
-    std::cout << "Jumping to label: " << context.label << '\n';
     int jump_address = program_memory_->getLabels()[context.label];
     *(context.program_counter) = jump_address - 1;
   }

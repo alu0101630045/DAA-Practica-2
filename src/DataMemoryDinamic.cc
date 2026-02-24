@@ -21,11 +21,17 @@ DataMemoryDinamic::DataMemoryDinamic() {
 }
 
 int DataMemoryDinamic::read(const int regist, const int pos) const {
-  // Comprobaciones de seguridad
+  if (regist < 0 || regist >= memory_.size() || pos < 0 || pos >= memory_[regist].size()) {
+    std::cerr << "Error: Índice fuera de rango en lectura de memoria." << std::endl;
+    return -1;
+  }
   return memory_[regist][pos];
 }
 
 void DataMemoryDinamic::write(const int regist, const int pos, const int data) {
-  // Comprobaciones de seguridad
+  if (regist < 0 || regist >= memory_.size() || pos < 0 || pos >= memory_[regist].size()) {
+    std::cerr << "Error: Índice fuera de rango en escritura de memoria." << std::endl;
+    return;
+  }
   memory_[regist][pos] = data;
 }

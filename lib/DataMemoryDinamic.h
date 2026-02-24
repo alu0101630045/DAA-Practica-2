@@ -13,6 +13,7 @@
 #ifndef DATAMEMORYDINAMIC_H_
 #define DATAMEMORYDINAMIC_H_
 
+#include <iostream>
 #include <vector>
 
 class DataMemoryDinamic {
