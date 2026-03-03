@@ -24,11 +24,21 @@
 
 
 int main(int argc, char* argv[]) {
+  if (argc < 4) {
+    std::cerr << "Usage: " << argv[0]
+              << " <input_tape> <output_tape> <program.ram> <mode>\n";
+    return EXIT_FAILURE;
+  }
+
   std::string input_tape_filename = argv[1];
   std::string output_tape_filename = argv[2];
-  std::string ram_filename;
-  int mode = 0;
-  MostrarMenu(ram_filename, mode);
+  std::string ram_filename = argv[3];
+  int mode = std::stoi(argv[4]);
+
+  if (mode != 1 && mode != 2) {
+    std::cerr << "Invalid mode. Use 1 for dynamic or 2 for static.\n";
+    return EXIT_FAILURE;
+  }
 
   InputTape input(input_tape_filename);
   OutputTape output;

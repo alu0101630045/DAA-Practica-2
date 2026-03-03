@@ -11,180 +11,53 @@
  *
  */
 #include "../lib/LogicUnitDinamic.h"
+#include "../lib/InstructionLoadDinamic.h"
+#include "../lib/InstructionStoreDinamic.h"
+#include "../lib/InstructionAddDinamic.h"
+#include "../lib/InstructionSubDinamic.h"
+#include "../lib/InstructionMultDinamic.h"
+#include "../lib/InstructionDivDinamic.h"
+#include "../lib/InstructionReadDinamic.h"
+#include "../lib/InstructionWriteDinamic.h"
+#include "../lib/InstructionJump.h"                // JUMP does not depend on memory type
+#include "../lib/InstructionJumpZero.h"
+#include "../lib/InstructionJumpGreaterThanZero.h"
+#include "../lib/InstructionJumpZeroDinamic.h"
+#include "../lib/InstructionJumpGreaterThanZeroDinamic.h"
 
+LogicUnitDinamic::LogicUnitDinamic(DataMemoryDinamic* data_memory,
+                                   ProgramMemory* program_memory,
+                                   InputTape* input_tape,
+                                   OutputTape* output_tape)
+    : data_memory_(data_memory),
+      output_tape_(output_tape),
+      input_tape_(input_tape),
+      program_memory_(program_memory) {
+  instructions_["LOAD"] = new InstructionLoadDinamic(data_memory_);
+  instructions_["STORE"] = new InstructionStoreDinamic(data_memory_);
+  instructions_["ADD"] = new InstructionAddDinamic(data_memory_);
+  instructions_["SUB"] = new InstructionSubDinamic(data_memory_);
+  instructions_["MUL"] = new InstructionMultDinamic(data_memory_);
+  instructions_["DIV"] = new InstructionDivDinamic(data_memory_);
+  instructions_["READ"] = new InstructionReadDinamic(data_memory_, input_tape_);
+  instructions_["WRITE"] = new InstructionWriteDinamic(data_memory_, output_tape_);
+  instructions_["JUMP"] = new InstructionJump(program_memory_);
+  instructions_["JZERO"] = new InstructionJumpZeroDinamic(program_memory_, data_memory_);
+  instructions_["JGTZ"] = new InstructionJumpGreaterThanZeroDinamic(program_memory_, data_memory_);
+}
 
-void LogicUnitDinamic::Load(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    data_memory_->write(0, 0, context.pos);
-  }
-
-  if (context.op_type == 1) {
-    int data = data_memory_->read(context.regist, context.pos);
-    data_memory_->write(0, 0, data);
-  }
-
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    int data = data_memory_->read(searched_regist, context.pos_ind);
-    data_memory_->write(0, 0, data);
+LogicUnitDinamic::~LogicUnitDinamic() {
+  for (auto& pair : instructions_) {
+    delete pair.second;
   }
 }
 
-void LogicUnitDinamic::Store(const InstructionContext& context) {
-  if (context.op_type == 1) {
-    int acc_data = data_memory_->read(0, 0);
-    data_memory_->write(context.regist, context.pos, acc_data);
+void LogicUnitDinamic::execute(const std::string& opcode,
+                               const InstructionContext& context) {
+  auto it = instructions_.find(opcode);
+  if (it == instructions_.end()) {
+    std::cerr << "Fatal ERROR: Ilegal instruction -> '" << opcode << "'" << std::endl;
+    std::exit(EXIT_FAILURE);
   }
-
-  if (context.op_type == 2) {
-    int acc_data = data_memory_->read(0, 0);
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    data_memory_->write(searched_regist, context.pos_ind, acc_data);
-  }
-}
-
-void LogicUnitDinamic::Add(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc + context.pos);
-  }
-
-  if (context.op_type == 1) {
-    int operand = data_memory_->read(context.regist, context.pos);
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc + operand);
-  }
-
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    int operand = data_memory_->read(searched_regist, context.pos_ind);
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc + operand);
-  }
-}
-
-void LogicUnitDinamic::Sub(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc - context.pos);
-  }
-
-  if (context.op_type == 1) {
-    int operand = data_memory_->read(context.regist, context.pos);
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc - operand);
-  }
-
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    int operand = data_memory_->read(searched_regist, context.pos_ind);
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc - operand);
-  }
-}
-
-void LogicUnitDinamic::Mult(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc * context.pos);
-  }
-
-  if (context.op_type == 1) {
-    int operand = data_memory_->read(context.regist, context.pos);
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc * operand);
-  }
-
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    int operand = data_memory_->read(searched_regist, context.pos_ind);
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc * operand);
-  }
-}
-
-void LogicUnitDinamic::Div(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    if (context.pos == 0) {
-      std::cerr << "Division by 0 not allowed\n";
-      return;
-    }
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc / context.pos);
-  }
-
-  if (context.op_type == 1) {
-    int operand = data_memory_->read(context.regist, context.pos);
-    if (operand == 0) {
-      std::cerr << "Division by 0 not allowed\n";
-      return;
-    }
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc / operand);
-  }
-
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    int operand = data_memory_->read(searched_regist, context.pos_ind);
-    if (operand == 0) {
-      std::cerr << "Division by 0 not allowed\n";
-      return;
-    }
-    int acc = data_memory_->read(0, 0);
-    data_memory_->write(0, 0, acc / operand);
-  }
-}
-
-void LogicUnitDinamic::Read(const InstructionContext& context) {
-  int tape_head = input_tape_->read();
-  
-  if (context.op_type == 1) {
-    data_memory_->write(context.regist, context.pos, tape_head);
-  }
-  
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    data_memory_->write(searched_regist, context.pos_ind, tape_head);
-  }
-  
-  input_tape_->moveRight();
-}
-
-void LogicUnitDinamic::Write(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    output_tape_->write(context.pos);
-    output_tape_->moveRight();
-  }
-  
-  if (context.op_type == 1) {
-    int op_value = data_memory_->read(context.regist, context.pos);
-    output_tape_->write(op_value);
-    output_tape_->moveRight();
-  }
-
-  if (context.op_type == 2) {
-    int searched_regist = data_memory_->read(context.regist, context.pos);
-    int op_value = data_memory_->read(searched_regist, context.pos_ind);
-    output_tape_->write(op_value);
-    output_tape_->moveRight();
-  }
-}
-
-void LogicUnitDinamic::Jump(const InstructionContext& context) {
-  int jump_address = program_memory_->getLabels()[context.label];
-  *(context.program_counter) = jump_address - 1;
-}
-
-void LogicUnitDinamic::JumpZero(const InstructionContext& context) {
-  if (data_memory_->read(0, 0) == 0) {
-    int jump_address = program_memory_->getLabels()[context.label];
-    *(context.program_counter) = jump_address - 1;
-  }
-}
-
-void LogicUnitDinamic::JumpGreaterThanZero(const InstructionContext& context) {
-  if (data_memory_->read(0, 0) > 0) {
-    int jump_address = program_memory_->getLabels()[context.label];
-    *(context.program_counter) = jump_address - 1;
-  }
+  it->second->execute(context);
 }

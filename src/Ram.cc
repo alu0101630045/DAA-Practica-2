@@ -39,9 +39,7 @@ void Ram::executeInstruction(const std::string& instruction, int& program_counte
 
   if (opcode == "JUMP" || opcode == "JZERO" || opcode == "JGTZ") {
     iss >> ctx.label;
-    if (opcode == "JUMP") logic_unit_->Jump(ctx);
-    else if (opcode == "JZERO") logic_unit_->JumpZero(ctx);
-    else if (opcode == "JGTZ") logic_unit_->JumpGreaterThanZero(ctx);
+    logic_unit_->execute(opcode, ctx);
     return;
   }
 
@@ -109,19 +107,6 @@ void Ram::executeInstruction(const std::string& instruction, int& program_counte
     }
   }
 
-  // ejecución
-  if (opcode == "LOAD") logic_unit_->Load(ctx);
-  else if (opcode == "STORE") logic_unit_->Store(ctx);
-  else if (opcode == "ADD") logic_unit_->Add(ctx);
-  else if (opcode == "SUB") logic_unit_->Sub(ctx);
-  else if (opcode == "MUL") logic_unit_->Mult(ctx);
-  else if (opcode == "DIV") logic_unit_->Div(ctx);
-  else if (opcode == "READ") logic_unit_->Read(ctx);
-  else if (opcode == "WRITE") logic_unit_->Write(ctx);
-  else {
-    // Hay alguna instruccion ilegar
-    std::cerr << "\nFatal ERROR: Ilegal instruction in line: " 
-              << program_counter << " -> '" << opcode << "'" << std::endl;
-    std::exit(EXIT_FAILURE);
-  }
+  // ejecución delegada al objeto lógico
+  logic_unit_->execute(opcode, ctx);
 }

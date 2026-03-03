@@ -51,6 +51,6 @@ std::vector<int> OutputTape::getOutput() const {
 void OutputTape::printOutputFile(const std::string filename) const {
   std::ofstream os(filename);
   for (const auto& value : tape) {
-    os << value;
+    os << value << '\n';
   }
 }

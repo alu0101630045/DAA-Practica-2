@@ -27,17 +27,16 @@ struct InstructionContext {
 
 class LogicUnitAbstract {
   public:
-    virtual void Load(const InstructionContext& context) = 0;
-    virtual void Store(const InstructionContext& context) = 0;
-    virtual void Add(const InstructionContext& context) = 0;
-    virtual void Sub(const InstructionContext& context) = 0;
-    virtual void Mult(const InstructionContext& context) = 0;
-    virtual void Div(const InstructionContext& context) = 0;
-    virtual void Read(const InstructionContext& context) = 0;
-    virtual void Write(const InstructionContext& context) = 0;
-    virtual void Jump(const InstructionContext& context) = 0;
-    virtual void JumpZero(const InstructionContext& context) = 0;
-    virtual void JumpGreaterThanZero(const InstructionContext& context) = 0;
+    virtual ~LogicUnitAbstract() = default;
+
+    /**
+     * Ejecuta una instrucción dada por su opcode. La función implementa
+     * el patrón estrategia delegando en la clase concreta correspondiente.
+     * @param opcode nombre de la instrucción (por ejemplo "LOAD", "ADD")
+     * @param context contexto con los operandos y el contador de programa
+     */
+    virtual void execute(const std::string& opcode,
+                         const InstructionContext& context) = 0;
 };
 
 #endif //LOGICUNITABSTRACT_H_

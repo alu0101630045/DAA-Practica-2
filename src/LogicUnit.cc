@@ -11,217 +11,55 @@
  *
  */
 #include "../lib/LogicUnit.h"
+#include "../lib/InstructionLoad.h"
+#include "../lib/InstructionStore.h"
+#include "../lib/InstructionAdd.h"
+#include "../lib/InstructionSub.h"
+#include "../lib/InstructionMult.h"
+#include "../lib/InstructionDiv.h"
+#include "../lib/InstructionRead.h"
+#include "../lib/InstructionWrite.h"
+#include "../lib/InstructionJump.h"
+#include "../lib/InstructionJumpZero.h"
+#include "../lib/InstructionJumpGreaterThanZero.h"
 
-void LogicUnit::Load(const InstructionContext& context) {
-  // CONSTANT (Op =i)
-  if (context.op_type == 0) {
-    data_memory_->write(0, context.pos);
-  }
+#include <algorithm>
+#include <iostream>
 
-  // Register (Op i)
-  if (context.op_type == 1) {
-    int data = data_memory_->read(context.regist);
-    data_memory_->write(0, data);
-  }
+LogicUnit::LogicUnit(DataMemory* data_memory,
+                     ProgramMemory* program_memory,
+                     InputTape* input_tape,
+                     OutputTape* output_tape)
+    : data_memory_(data_memory),
+      output_tape_(output_tape),
+      input_tape_(input_tape),
+      program_memory_(program_memory) {
+  // Register strategies
+  instructions_["LOAD"] = new InstructionLoad(data_memory_);
+  instructions_["STORE"] = new InstructionStore(data_memory_);
+  instructions_["ADD"] = new InstructionAdd(data_memory_);
+  instructions_["SUB"] = new InstructionSub(data_memory_);
+  instructions_["MUL"] = new InstructionMult(data_memory_);
+  instructions_["DIV"] = new InstructionDiv(data_memory_);
+  instructions_["READ"] = new InstructionRead(data_memory_, input_tape_);
+  instructions_["WRITE"] = new InstructionWrite(data_memory_, output_tape_);
+  instructions_["JUMP"] = new InstructionJump(program_memory_);
+  instructions_["JZERO"] = new InstructionJumpZero(program_memory_, data_memory_);
+  instructions_["JGTZ"] = new InstructionJumpGreaterThanZero(program_memory_, data_memory_);
+}
 
-  // Indirect (Op *i)
-  if (context.op_type == 2) {
-    int regist = data_memory_->read(context.regist);
-    if (regist == -1) {
-      std::cerr<<"Incorrect Register: R" << context.regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int data = data_memory_->read(regist);
-    if (data == -1) {
-      std::cerr<<"Incorrect Register: R" << regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    data_memory_->write(0, data);
+LogicUnit::~LogicUnit() {
+  for (auto& pair : instructions_) {
+    delete pair.second;
   }
 }
 
-void LogicUnit::Store(const InstructionContext& context) {
-  if (context.op_type == 1) {
-    int data = data_memory_->read(0);
-    data_memory_->write(context.regist, data);
+void LogicUnit::execute(const std::string& opcode,
+                        const InstructionContext& context) {
+  auto it = instructions_.find(opcode);
+  if (it == instructions_.end()) {
+    std::cerr << "Fatal ERROR: Ilegal instruction -> '" << opcode << "'" << std::endl;
+    std::exit(EXIT_FAILURE);
   }
-
-  if (context.op_type == 2) {
-    int regist = data_memory_->read(context.regist);
-    if (regist > 20 || regist <= 0) {
-      std::cerr<<"Incorrect Register: R" << regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int data = data_memory_->read(0);
-    data_memory_->write(regist, data);
-  }
-}
-
-void LogicUnit::Add(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int r_cero_data = data_memory_->read(0);
-    int sum = r_cero_data + context.pos;
-    data_memory_->write(0, sum);
-  }
-
-  if (context.op_type == 1) {
-    int r_op_data = data_memory_->read(context.regist);
-    int r_cero_data = data_memory_->read(0);
-    int sum = r_cero_data + r_op_data;
-    data_memory_->write(0, sum);
-  }
-
-  if (context.op_type == 2) {
-    int r_op_regist = data_memory_->read(context.regist);
-    if (r_op_regist > 20 || r_op_regist <= 0) {
-      std::cerr<<"Incorrect Register: R" << r_op_regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int r_regist_data = data_memory_->read(r_op_regist);
-    int r_cero_data = data_memory_->read(0);
-    int sum = r_cero_data + r_regist_data;
-    data_memory_->write(0, sum);
-  }
-}
-
-void LogicUnit::Sub(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int r_cero_data = data_memory_->read(0);
-    int sub = r_cero_data - context.pos;
-    data_memory_->write(0, sub);
-  }
-
-  if (context.op_type == 1) {
-    int r_op_data = data_memory_->read(context.regist);
-    int r_cero_data = data_memory_->read(0);
-    int sub = r_cero_data - r_op_data;
-    data_memory_->write(0, sub);
-  }
-
-  if (context.op_type == 2) {
-    int r_op_regist = data_memory_->read(context.regist);
-    if (r_op_regist > 20 || r_op_regist <= 0) {
-      std::cerr<<"Incorrect Register: R" << r_op_regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int r_regist_data = data_memory_->read(r_op_regist);
-    int r_cero_data = data_memory_->read(0);
-    int sub = r_cero_data - r_regist_data;
-    data_memory_->write(0, sub);
-  }
-}
-
-void LogicUnit::Mult(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int r_cero_data = data_memory_->read(0);
-    int mult = r_cero_data * context.pos;
-    data_memory_->write(0, mult);
-  }
-
-  if (context.op_type == 1) {
-    int r_op_data = data_memory_->read(context.regist);
-    int r_cero_data = data_memory_->read(0);
-    int mult = r_cero_data * r_op_data;
-    data_memory_->write(0, mult);
-  }
-
-  if (context.op_type == 2) {
-    int r_op_regist = data_memory_->read(context.regist);
-    if (r_op_regist > 20 || r_op_regist <= 0) {
-      std::cerr<<"Incorrect Register: R" << r_op_regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int r_regist_data = data_memory_->read(r_op_regist);
-    int r_cero_data = data_memory_->read(0);
-    int mult = r_cero_data * r_regist_data;
-    data_memory_->write(0, mult);
-  }
-}
-
-void LogicUnit::Div(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    int r_cero_data = data_memory_->read(0);
-    if (context.pos == 0) {
-      std::cerr << "Division by 0 not allowed"<<'\n';
-      return;
-    }
-    int div = r_cero_data / context.pos;
-    data_memory_->write(0, div);
-  }
-
-  if (context.op_type == 1) {
-    int r_op_data = data_memory_->read(context.regist);
-    int r_cero_data = data_memory_->read(0);
-    if (r_op_data == 0) {
-      std::cerr << "Division by 0 not allowed"<<'\n';
-      return;
-    }
-    int div = r_cero_data / r_op_data;
-    data_memory_->write(0, div);
-  }
-
-  if (context.op_type == 2) {
-    int r_op_regist = data_memory_->read(context.regist);
-    if (r_op_regist > 20 || r_op_regist <= 0) {
-      std::cerr<<"Incorrect Register: R" << r_op_regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int r_regist_data = data_memory_->read(r_op_regist);
-    int r_cero_data = data_memory_->read(0);
-    if (r_regist_data == 0) {
-      std::cerr << "Division by 0 not allowed"<<'\n';
-      return;
-    }
-    int div = r_cero_data / r_regist_data;
-    data_memory_->write(0, div);
-  }
-}
-
-void LogicUnit::Read(const InstructionContext& context) {
-  int tape_head = input_tape_->read();
-  data_memory_->write(context.regist, tape_head);
-  input_tape_->moveRight();
-}
-
-void LogicUnit::Write(const InstructionContext& context) {
-  if (context.op_type == 0) {
-    output_tape_->write(context.pos);
-    output_tape_->moveRight();
-  }
-  
-  if (context.op_type == 1) {
-    int op_value = data_memory_->read(context.regist);
-    output_tape_->write(op_value);
-    output_tape_->moveRight();
-  }
-
-  if (context.op_type == 2) {
-    int regist = data_memory_->read(context.regist);
-    if (regist > 20 || regist <= 0) {
-      std::cerr<<"Incorrect Register: R" << regist << " does not exist in memory"<<'\n';
-      return;
-    }
-    int op_value = data_memory_->read(regist);
-    output_tape_->write(op_value);
-    output_tape_->moveRight();
-  }
-}
-
-void LogicUnit::Jump(const InstructionContext& context) {
-  int jump_address = program_memory_->getLabels()[context.label];
-  *(context.program_counter) = jump_address - 1;
-}
-
-void LogicUnit::JumpZero(const InstructionContext& context) {
-  if (data_memory_->read(0) == 0) {
-    int jump_address = program_memory_->getLabels()[context.label];
-    *(context.program_counter) = jump_address - 1;
-  }
-}
-
-void LogicUnit::JumpGreaterThanZero(const InstructionContext& context) {
-  if (data_memory_->read(0) > 0) {
-    int jump_address = program_memory_->getLabels()[context.label];
-    *(context.program_counter) = jump_address - 1;
-  }
+  it->second->execute(context);
 }
